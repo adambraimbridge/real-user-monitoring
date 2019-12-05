@@ -11,8 +11,38 @@
         background-color: #fff1e5;
       }
     </style>
-    <script src="rum.js"></script>
-    <script defer src="main.js"></script>
+    <script>
+      !(function(){
+        if('PerformanceLongTaskTiming' in window){
+          console.log("Broadcast: PerformanceLongTaskTiming")
+          var g=window.__tti={e:[]};
+        }
+
+        if('PerformanceObserver' in window){
+          var observer = new PerformanceObserver(function(entryTypes){
+            var entries = entryTypes.getEntries()
+            console.log("Broadcast: PerformanceObserver", entries.length)
+            // console.table(entries)
+            for (var i=0; i<=entries.length; i++) {
+              var entry = entries[i]
+              // console.table({entry})
+              console.table({ 
+                name: entry.name, 
+                entryType: entry.entryType, 
+                startTime: entry.startTime 
+              })
+            }
+          });
+          // var entryTypes = ['resource', 'paint', 'longtask', 'navigation']
+          var entryTypes = ['paint','longtask', 'navigation']
+          observer.observe({ entryTypes })
+        }
+      })()
+
+      // !function(){if('PerformanceLongTaskTiming' in window){var g=window.__tti={e:[]};
+      // g.o=new PerformanceObserver(function(l){g.e=g.e.concat(l.getEntries())});
+      // g.o.observe({entryTypes:['longtask']})}}();
+    </script>
     <link rel="preconnect" href="https://spoor-api.ft.com" />
     <link
       rel="preconnect"
